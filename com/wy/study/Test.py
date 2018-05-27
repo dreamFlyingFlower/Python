@@ -4,7 +4,12 @@ Created on 2018年5月13日
 @author: wanyang
     input:从控制台输入,输入后的类型都为字符串
     python数据类型:str,int,long,float,boolean,complex
-    数据结构:dict(map),orderdict(有序map),list(list),set(set),tuple(元祖,相当于数据),双向队列(队列),单项队列(栈)
+    数据结构:dict(map),orderdict(有序map),list(list),set(set),frozenset(不可变集合),tuple(元祖,相当于数据),双向队列(队列),单项队列(栈)
+    chr(x):将整数转换为单字符
+    ord(x):将字符转换为整数
+    hex(x):将整数转为16进制字符串
+    bin(x):将整数转为2进制
+    oct(x):将整数转为8进制
     id(arg):拿到该参数在python内存中的地址
     dir(arg):拿到该参数可以使用的方法
     for in :方法可遍历所有类型的数据,当遍历dic时,是遍历其中的key,遍历dic时可直接写成for k,v in dic
@@ -27,6 +32,10 @@ Created on 2018年5月13日
     except Exception,e: 
     finally:
     方法或其他需要进行操作的地方,若不进行操作,可使用pass关键字,但是不能什么都不写,会报错
+    
+    pickle:序列化
+    
+    异常,日志,python自带,但是不知道有没有框架,可网上查找
 '''
 #!/usr/bin/env python
 
