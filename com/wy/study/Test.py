@@ -2,6 +2,8 @@
 Created on 2018年5月13日
 
 @author: wanyang
+
+    twisted框架暂不支持python3,只是还没修改完,现在是否支持,可查官网,类似于httpclient
     input:从控制台输入,输入后的类型都为字符串
     python数据类型:str,int,long,float,boolean,complex
     数据结构:dict(map),orderdict(有序map),list(list),set(set),frozenset(不可变集合),tuple(元祖,相当于数据),双向队列(队列),单项队列(栈)
