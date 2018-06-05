@@ -1,4 +1,4 @@
-'''
+ '''
 Created on 2018年5月27日
 @author: wanyang
     定义类的时候的时候继承object,可调用新的方法,成为新型对象类,不继承object是普通类
@@ -6,6 +6,11 @@ Created on 2018年5月27日
     继承:在定义类的时候,后面的括号中可以写需要继承的类名,可多继承,写过个父类
         若多继承的父类中有冲突的公有属性和方法,都以继承的顺序中的第一个为准
         除非子类重写了父类的相同属性和方法
+        子类调用父类的方法,同样是用super,也可以直接父类.方法名
+        但是super调用可以不传self,父类.方法名需要传self
+    python没有方法的重载,只要名字相同就只能有一个方法,后面的方法覆盖前面的方法
+    
+    利用正则找网页里的图片re.findall(r'src="(.*?\.(jpg|png|jepg))"',html)
 '''
 #类外的属性,没什么用处
 str1 = " w ye bu zd";
@@ -22,6 +27,16 @@ class TestClass(object):
     __username = "that";
     __age=0;
     #系统内置属性,就是系统关键字之类的比如__name__
+    
+    def __init__(self):
+        print("我是每次默认都会调的,初始化方法,相当于空构造")
+        
+    def __str__(self, *args, **kwargs):
+        print("相当于java里的tostring方法重写,和init一样是内置方法,还有很多,可官网查找")
+        return object.__str__(self, *args, **kwargs)
+    
+    def __del__(self):
+        print("相当于destory,对象被销毁的时候调用")
     
     #必须要传一个self(可自定义),但实体类调用的时候不需要传self,就是类本身
     #不论是公有方法还是私有方法都不能直接被类名.方法名调用
