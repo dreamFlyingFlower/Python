@@ -67,6 +67,12 @@ Created on 2018年5月13日
         当这个基本类型当作参数传递到方法里时,是可以修改的,但是只在该 方法内改变参数,不影响全局
     在方法里面对参数进行运算时,a+=a,和a=a+a是不一样的结果,后一种是先定义一个变量,已经不再是传递的参数
         的地址值,这跟java里很不一样,可变性太多,因为java里的元组等不能使用+=运算,但是python中各种类型都可以
+        
+    //:整除
+    **:幂运算
+    逻辑运算符:and,or,not相当于&&,||,!
+    判断一个元组中的成员,用in的时候可以使用not in,不存在而不是not param in typle
+    is和is not判断某一个变量是否为某类型,需要使用type,ex:type(tuple) is tuple 为True
 '''
 #!/usr/bin/env python
 
@@ -97,6 +103,8 @@ print(__name__)
 #可定义对应个数的参数直接取出元组或数组的参数,并赋值到变量上
 aa,bb,cc=["fdsf","fdsgfd","gfdg"]
 #dict的遍历,可遍历key,可遍历value,也可遍历items,遍历items得到的是一个元组
-map1 = {"id":11}
-for x,y in map1.items:
+map1 = {"id1":11}
+for x,y in map1.items():
     print("%s,%s" %(x,y))
+    
+print(type(map1) is dict)
