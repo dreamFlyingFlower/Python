@@ -75,6 +75,7 @@ Created on 2018年5月13日
     is和is not判断某一个变量是否为某类型,需要使用type,ex:type(tuple) is tuple 为True
 '''
 #!/usr/bin/env python
+from _functools import reduce
 
 # python的源码格式为py,编译后的为pyc,经过优化的为pyo
 # 编译
@@ -108,3 +109,14 @@ for x,y in map1.items():
     print("%s,%s" %(x,y))
     
 print(type(map1) is dict)
+
+#lambda表达式,需要关键字lamba,并且用一个变量接受,类似js中的变量方法
+l = lambda x,y:x*y;
+#调用lambda函数
+l(5,6);
+
+listArr = [1,2,34,56,6];
+#reduce函数类似于递归,第一个参数可以是一个方法,第一个参数是方法作用的列表
+#第一个参数会从list中拿值作为第一个参数的参数,然后将返回值作为参数,继续和下一个参数进行运算
+#直到list的走完
+reduce(lambda x,y:x*y,listArr);
