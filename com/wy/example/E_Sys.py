@@ -14,6 +14,9 @@ print(sys.path)
 """
 print(sys.argv)  # ['F:\\repository\\Python\\Python\\com\\wy\\example\\E_Sys.py'],是一个列表,主要是获得执行参数
 print(sys.argv[0])  # F:\\repository\\Python\\Python\\com\\wy\\example\\E_Sys.py
+sys.stdout.write("text")    # 标准输出
+sys.stdout.flush()  # 将内存中的数据刷新到标准输出上
+print(sys.getdefaultencoding()) # 获得当前文件默认编码
 
 import os
 
@@ -23,7 +26,9 @@ print(t1)  # 0
 t2 = os.popen("dir").read() # 若不使用read,会保存到t2中,但是输出的是内存地址,加上read则可以输出结果
 print(t2)
 print(os.path.abspath(__file__))    # 获得当前文件的绝对路径
+print(os.path.dirname(os.path.abspath(__file__)))   # 返回当前文件的绝对路径的父级文件夹绝对地址
 t3 = os.walk("F:\\repository\\BMS\\static\\") # 获得当前目录下的所有文件,返回一个generator
-print(t3)
-for item in tuple(t3):
-    print(item)
+    
+print(os.getcwd())
+print(os.curdir)
+print(os.pardir)

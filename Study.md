@@ -1,3 +1,5 @@
+
+
 # Python
 
 ## 一.简介
@@ -118,7 +120,15 @@
 
 
 
-##### 1.2.5 集合
+##### 1.2.5 有序字典
+
+> 需要引入collections,from collections import OrderedDict
+
+1. 和dict字典的方法基本上一样,只是里面的字典是有序的,加入的时候是什么顺序,取出的时候就是什么顺序
+
+
+
+##### 1.2.6 集合(set)
 
 1. 集合是无序列表,元素不能重复,集合底层是字典实现,集合的所有元素都是字典中的key
 
@@ -258,9 +268,46 @@
 
 26. class.mro():查看类的继承结构层次
 
+27. all(iterable):若可迭代对象中所有的值都为True则返回True
+
+28. any(iterable):若可迭代对象中只要有一个值是True,就返回True,空迭代返回false
+
+29. bin(m):将数字转成2进制字符串
+
+30. bytearray([source[,encoding[,errors]]]):将一个字符串转成字节数组
+
+31. bytes(source,encoding):将一个字符串转成字节
+
+32. filter(func,iterable):将一个可迭代对象中的元素进行过滤,需要个一个方法为第一个参数,返回符合条件的值
+
+    ```python
+    res = filter(lambda x:x>3,range(10))
+            for item in res:
+                print(item)
+    ```
+
+33. map(func,iterable):类似filter,对每个可迭代对象进行处理,iterable中多少元素仍然返回多少元素
+
+34. frozenset([iterable]):将一个集合转换成一个不可修改的集合
+
+35. hex(n):将一个整数转成16进制
+
+36. pow(n,m):返回n的m次方数,做幂计算
+
+37. slice(m,n[,step]):和切片功能一样,不过这个比较麻烦
+
+    ```python
+    s = slice(1,5)
+    x = [1,4,7,8,9,9,54,450]
+    for item in x[s]:
+        print(item)
+    ```
+
+38. 
 
 
-### 2.字符串
+
+### 2.字符串(str)
 
 1. len(m):拿到m长度,是字符串长度,而非字节长度
 
@@ -505,6 +552,14 @@ for index,item in enumerate(list1):
 
 
 
+### 9.迭代(iter)
+
+1. Iterator迭代器是只指可迭代对象,如generator等,但是list,tuple,str都不是迭代器,他们是可迭代的(Iterable),不能使用next方法进行查找
+2. iter(list):将list列表转换成一个迭代器,tuple,str都可以,之后可以使用next方法
+3. isinstance(list,Iterator):可以判断list是否为一个迭代器,list不是,需要导入from collections import Iterator
+
+
+
 ## 四.控制语句
 
 > 所有的控制语句条件语句并不是用括号()隔绝代码块,而是用空格和冒号
@@ -566,7 +621,7 @@ for key1,key2,key3 in zip(tuple1,tuple2,tuple3):
 
 > 适用于while和for循环,若while和for循没有被break,那么在循环完成之后必然会执行else之中的语句
 
-```
+```python
 while cnd1:
 	dosomething1
 else:
@@ -576,6 +631,27 @@ for item in tuple:
 	dosomething1
 else
 	dosomething2
+```
+
+
+
+### 5.yield
+
+> yield arg:返回arg的值并暂停当前进程,当调用包含yield的方法的\_\_next\_\_()之后才能继续运行该线程
+>
+> 当一个函数中有yield的时候,必须使用\_\_next\_\_()方法调用才可,直接使用fn()只是生成了一个生成器,函数并没有开始调用
+
+```python
+def fn():
+    n=0
+    while n<10:
+        yield n
+        print(n)
+        n++
+fn1 = fn()	# 只是生成了一个生成器,并没有开始调用函数
+print(fn1.__next__())	# 0,此时才开始第一次调用函数
+print("-----")	# ------
+print(fn1.__next__())	# 1
 ```
 
 
@@ -604,7 +680,15 @@ else
 
 7. 函数不需要指定返回值类型,若需要返回值,可以使用return value
 
-8. 若结尾有return语句,且函数能执行到该return,那么就可以返回值,若没有return,则返回None
+8. 若结尾有return语句,且函数能执行到该return,那么就可以返回值;
+
+   > return没有,则返回None
+   >
+   > return有返回值,则返回
+   >
+   > return可以返回多个值,调用之后返回的多个值会以元组的形式赋值给变量
+   >
+   > 可以返回一个函数名
 
 9. 因为python是解释执行,所以必须先定义函数,之后才能调用
 
@@ -705,7 +789,7 @@ else
        print(str1)  # 可访问
        str1="gfdgfdgfd"  # 可改
    	def fn():
-           print(str1)  # 抛异常,默认访问的是fn内部的str1,但是内部没有,故抛异常
+           print(str1)  # 抛异常,先访问fn内部str1,内部虽然定义了,但还没有执行,注释下方的str1就行
    		global str1
    		print(str1)  # fdsfds,访问全局变量,因为已经声明了
    		str1="433543"
@@ -773,7 +857,10 @@ else
 
 #### 8.1 global
 
-> 当在函数中要访问和修改全局变量时,需要先声明一下global,之后才可以访问和修改,见3.1全局变量
+1. 当在函数中要访问和修改全局变量时,可以直接访问,但是要修改全局变量,需要先声明global,见3.1全局变量
+2. 若在方法或函数中定义了一个局部变量,但是加上了global,那么该局部变量就会变成全局变量,造成变量混乱,这种写法禁用
+
+
 
 #### 8.2 nonlocal
 
@@ -787,6 +874,61 @@ def fn1():
 		a=5		# 不可修改,抛异常
 		nonlocal a
 		a=7		# 可修改
+```
+
+
+
+### 9.函数注解
+
+#### 9.1 无参函数注解
+
+> 将函数A作为注解标注另外一个方法B,在调用B时就等同于调用A,而B是注解A的参数,同时B的参数会传给A中的嵌套函数C,作为一个通用方法,C函数的参数可以用可变参数代替
+
+```python
+def A(func):
+    print("before")
+    func()
+    print("after")
+    def warpper(*arg1,**arg2):
+        print("wrapper before")
+        func()
+        print("wrapper after")
+    return warpper
+@A
+def B():
+    print("B")
+    
+# B   # 若A无返回值或返回值不是一个方法指针,直接调用,不需要加上(),加上反而会报错,不推荐使用
+B()	# 返回一个方法指针
+```
+
+
+
+#### 9.2 有参函数注解
+
+> 无参函数注解中,如是需要外界注入参数时,无法实现,以下方式可以实现外界参数注入,该方式的原理:
+>
+> 只要在B函数上添加的方法注解没有用B方法做为参数,那么每次A方法的返回都会被认为是同A一样的函数注解,直到A返回的方法指针是用一个方法作为参数的时候才终止
+
+```python
+def A(type):	# 注解中的参数会传入到type中,此时第一层方法parent_wrapper返回
+    # 利用type来dosomething
+    print(type)
+    def parent_wrapper(func):	# 返回该方法时仍然会作为函数注解,同时调用该方法,返回wrapper
+        def wrapper(*arg1,**arg2):	# 最后一层方法调用
+            print("wrapper before")
+            func()
+            print("wrapper after")
+        return wrapper
+    return parent_wrapper
+@A(type=1)
+def B():
+    print("B")
+@A(type=2)
+def C():
+    print("C")
+B()
+C() 
 ```
 
 
@@ -813,11 +955,14 @@ class Test(parent1[,parent2]):
 
 ### 2.属性
 
+> 类全局变量,实例属性,临时属性访问与修改作用域访问极其混乱,应慎用,注意注释
+
 #### 2.1 实例属性
 
-> 1.初始化时赋值给self的属性,每个实例属性都不一样,不需要事先定义,在init的时候初始化
->
-> 2.实例可以定义初始化没有的属性,每一个实例都是一个类似dict的对象,可以自由定义属性,类似js的object.但是实例定义的自由属性只能自己用,其他实例若使用该属性会抛异常
+1. 初始化时赋值给self的属性,每个实例属性都不一样,不需要事先定义,在init的时候初始化
+2. 实例可以定义初始化没有的属性,每一个实例都是一个类似dict的对象,可以自由定义属性,类似js的object.但是实例定义的自由属性只能自己用,其他实例若使用该属性会抛异常
+3. 实例可以访问类全局变量,但是不能修改.即使修改也只是相当于在当前实例中新建了一个同名变量
+4. 若类修改了类全局变量,而全局变量是不可改类型,实例访问类全局变量时,若实例有同名属性,返回实例同名属性,否则返回类全局属性;若类全局变量是可变类型,实例访问和类访问无区别
 
 ```python
 class TestClass(object):
@@ -838,7 +983,9 @@ print(t1.name)	# 抛异常
 
 #### 2.2 类全局属性
 
-> 定义在类中的属性,必须要赋值,也可以在类中的其他方法中随意调用,最好是通过类名调用
+1. 定义在类中的属性,必须要赋值,也可以在类中的其他方法中随意调用,最好是通过类名调用
+2. 只有类才能修改类全局变量,实例只能访问,不能修改
+3. 若类修改了类全局变量,而全局变量是不可改类型,实例访问类全局变量时,若实例有同名属性,返回实例同名属性,否则返回类全局属性;若类全局变量是可变类型,实例访问和类访问无区别
 
 ```python
 class TestClass(object):
@@ -909,7 +1056,7 @@ class.__subclasses__():类的子类列表
 
 
 
-#### 3.1 固定方法
+#### 3.1 固定方法属性
 
 
 
@@ -953,9 +1100,38 @@ class TestClass(object):
 
 
 
-##### 3.1.5\_\_str\_\_(self)
+##### 3.1.5 \_\_str\_\_(self)
 
 1. 类似java中的toString()方法,默认的str方法输出的是类的类型
+
+
+
+##### 3.1.6 \_\_module\_\_
+
+> 输出对象是那个模块的实例
+
+
+
+##### 3.1.7 \_\_class\_\_
+
+> 输出对象来自于那个类的实例
+
+
+
+##### 3.1.8 \_\_slots\_\_
+
+> 1.指定实例对象中的属性列表,让实例在使用的时候不可以新增任何不在该列表中的对象.指定该属性可以减少内存中的消耗
+>
+> 2.若是类继承了除object以外的其他类,那么该属性无效
+
+```python
+class Test:
+	__slots__ = ["test1"]
+	def __init__(self):
+		pass
+t = Test()
+t.dddd = 333 # 抛出,不在slots列表中
+```
 
 
 
@@ -1044,7 +1220,7 @@ class TestClass(object):
 
 #### 3.3 特殊方法
 
-##### 3.3.1 特殊类方法
+##### 3.3.1 类方法
 
 ```python
 1.__new__(self):对象创建
@@ -1061,7 +1237,7 @@ class TestClass(object):
 
 
 
-##### 3.3.2 特殊运算符方法
+##### 3.3.2 运算符方法
 
 ```
 __add__():+,加法
@@ -1124,12 +1300,76 @@ t.test03()		# 打印test02,真正的方法调用
 
 
 
-### 5.使用类
+### 5.类的引入
+
+#### 5.1 静态导入
+
+1. 直接import:引入整个模块
+2. from A import B:从A模块中只引入B
+3. from A import * :从A模块中引入A中所有的属性和方法,当前类可以直接调用A中所有方法,不需要加任何前缀
+4. 在每个包的\_\_init\_\_文件夹中直接添加当前包下所有的模块
+
+```
+1.import A
+    # C模块中调用A的方法
+    A.a()
+2.from A import B
+    # C模块中调用B的方法
+    B.a()
+    # 若B本身就是一个方法引用,那么可以直接调用
+    B()
+3.from A import * 
+    # 若使用第3种方法,A中有方法a(),则在C中文件中可以直接调用a()
+    a()
+4.import A as X
+	# 给引入一个别名,调用的时候用别名调用即可
+5.在包的__init__文件中添加from . import file.py,之后在其他模块中直接引入文件包名
+```
+
+
+
+#### 5.2 动态导入
+
+1. 使用内部的动态函数\_\_import\_\_,但是这种方法官方并不建议
+2. 使用importlib模块,多级导入可以用点连接,**官方建议使用**
+
+```python
+import importlib
+xx = importlib.import_module("com.first.xx") # 直接就到xx层的引入,而内部的只到com
+print(xx) # 就是xx的引用
+xx = __import__("com.first.xx")	# 只到com层
+print(xx) # 是com的引用,但是可以使用下面的first和xx层
+xx = __import__("com") # 仍然到com层
+print(xx.first) # 报错,引入里没有的路径无法使用
+```
+
+
+
+#### 5.3 自定义模块导入
+
+1. 需要在包下面新建一个setup.py文件,引入distutils.core
+2. 新建一个setup元组,元组里有name,verison,description,author,py_modules属性
+3. py_modules是一个列表,将需要导出的python类写入,若是模块在包下,需要下包.模块名
+
+```python
+import distutils.core from setup
+setup(name="自定义的第三方包名",version="版本",description="描述",author="哈哈",
+     py_modules=["com.wy.Constants","com.wy.Encoding"])
+```
+
+4. 在setup.py目录下运行命令:python setup.py build->python setup.py sdist
+5. 运行完之后在当前目录会省省一个dist目录,目录下会生成一个压缩包
+6. 使用时需要将压缩包解压,运行命令python setup.py install,就可以使用了
+
+
+
+### 6.使用类
 
 1. 在类定义的module中使用,可以不用引入该类,直接使用
 2. 类实例化时,self参数不需要传,如s=TestClass(),若构造函数init中有不可变参数,初始化时必须传参,否则抛异常
 
 ```python
+# 通常形式上定义类
 class TestClass(object):
 	# 构造方法,self必须是第一个参数,后面的都是参数,self相当于类本身,每次都会调用
     def __init__(self,name, *args1, **args2):
@@ -1143,9 +1383,32 @@ class TestClass(object):
     def __test01(self):
         print("test01");
    
-t = TestClass("name")
+t = TestClass("name") 
 t1 = TestClass()	# 抛异常,必须传name参数
+# 高级方法定义类
+def __init__(self):
+	pass
+def fn1(self):
+    pass
+# 此种方法定义类中type是关键字,TestClass字符串是类型,第2个是元组,表示类的继承,第3个参数是方法
+TestClass1=type("TestClass1",(object,),{"__init__":__init__,"fn1":fn1})
+t2 = TestClass1() # 创建类的实例还是和普通的创建一样
 ```
+
+3. 
+
+
+
+### 7.反射
+
+> 只有4个常用方法来判断某个类中是否有指定方法,是否可调用
+
+1. hasattr(obj,attr):判断实例中是否有attr方法,obj为类的实例对象,attr为类中的方法名或属性名字符串,返回True/False
+2. getattr(obj,attr):返回实例中指定属性或方法的内存地址,之后加上()就可以调用该方法
+3. setattr(obj,attr,value):给实例中添加某个属性或方法,value为属性方法的地址
+4. delattr(obj,attr):删除实例中的attr属性方法
+
+
 
 
 
@@ -1163,51 +1426,559 @@ t1 = TestClass()	# 抛异常,必须传name参数
    >
    > encoding:字符编码
 
-2. r:只读,r+读写,追加
+2. r:只读,r+读写,追加,推荐用r+
 
-3. w:覆盖写,文件存在则直接覆盖源文件,没有就创建一个新文件,w+读写(有问题,不要用)
+3. w:覆盖写,若文件存在,清空文件内容,没有就创建一个新文件,
 
-4. a:追加写入,不能读,a+读写
+4. w+读写,这个方式有有问题,不能在当前指针位置进行修改,只能写在最后一行
 
-5. b:打开二进制文件,U支持�?有换行符
+5. a:追加写入,不能读
 
-6. with也可以打开文件,并且不用关心忘记关掉文件,会自动关闭文件
+6. a+:追加读写
 
-7. 文件的seek和tell方法,都是以字节为单位来操作指针,但是read和write方法都是以字符来读写数据
+7. b:打开二进制文件,此时不能指定字符编码
+
+8. U:表示在读取文件时,自动将\r,\n,\r\n转换成\n,可以和r+同时使用
+
+9. with也可以打开文件,并且不用关心忘记关掉文件,会自动关闭文件
+
+10. 文件的seek和tell方法,都是以字节为单位来操作指针,但是read和write方法都是以字符来读写数据
+
+```python
+with open("file1", 'r',encoding="utf8") as f1,open("file2","r+",encoding="utf8") as f2:
+    print("do something")
+    print(f1.read())
+```
 
 
 
 ### 2.文件读取
 
-1. file.read():一次性将文件内容全部读取,若只是读取文件或只是写文件,没有其他操作,可进行链式调用
+1. file.read([n]):默认一次性将文件内容全部读取,若传n,则只读取n个字符,换行符也算一个字符,以字符为单位
 2. file.readline():读一行,根据换行符来判断
 3. file.readlines():将文件中所有内容的每一行内容加上换行符读取到一个list中
 4. 打开之后的文件可以直接用for循环进行读取,而且内存中读到那一行,就只存那一行,对比较大的文件比较友好
 
-```
+```python
 read1 = open("testFile.txt", 'r',encoding="utf8");  # 可链式调用open("file").read()
 # print(read1.read());    # 读所有
 print(read1.readlines())    # 读所有,将每行内容加上换行符读取到一个list中
 print(read1.readline());   # 读一行,空,因为指针已经到结尾了,再读就没有了
 read1.close();
 read2 = open("testFile.txt", 'r',encoding="utf8"); 
-for l in read2:	# 按顺序一行一行的读,在内存中也只存一行,对内存消耗比较小
+for l in read2:	# 按顺序一行一行的读,在内存中也只存一行,对内存消耗比较小,推荐使用
     print(l)
 read2.close()
 ```
 
 
 
+### 3.文件写入
+
+1. file.write(m):往文件中写入字符串,不是字节,根据打开文件模式的不同,可能是追加写或覆盖写
+2. file.flush():若需要立即将内存中的数据刷新到硬盘上,就需要调用本方法,否则知道文件关闭才写到硬盘
+
+
+
+### 4.其他操作
+
+1. file.tell():获得当前读取的指针位置,0表示还没开始读取,1表示读取了一个字节,根据编码格式的不一样,每个字符或中文在文件中所占的字节数也不一样,中文在utf8中占3个字节
+2. file.seekable():文件指针是否可移动,比如终端设备就不能移动
+3. file.seek(n):将指针移动到指定位置,0表示开头,同时seek移动的单位也是**字节**
+4. file.flush():写文件时会先将字节读到内存中,调用本方法会立刻将内存中的数据写到硬盘上,否则等文件关闭时才会写到硬盘上
+5. file.name():返回文件的名字
+6. file.isatty():文件是否是一个终端
+7. file.truncate([n]):从当前指针位置开始截取n个**字节**,文件后面的内容全部清除
+
+
+
+
+
 ## 八.常用类,方法
 
-#### 1.time
 
-> 需要引入time类,import time
+
+### 1.time
+
+> 需要引入time类,import time,时间相关
 
 1. time.time():返回1970.1.1到当前时间的秒数,小数点后的微秒,前3位是毫秒,加上后3位表示微秒
 
-#### 2.random
+2. time.sleep(n):阻断线程n秒,当时间过后继续执行程序
 
-> 需引入random,import random
+3. time.localtime([n]):获得本地时区当前时间的单独部分,得到的是一个time.struct_time格式,用tuple包装下可访问.若传n,n为秒数,可以利用秒来获得指定的时间
 
-1. random.shuffle(list):将列表中元素的顺序随机打乱
+4. time.strftime(format[,tuple]):将当前时间转成指定格式,若指定了localtime格式的tuple,那么将tuple代表的时间转换为字符串时间
+
+   > %Y-%m-%d:4位年-2位月-2位日
+   >
+   > %X:标准24小时时分秒,等同于%H:%M:%S
+   >
+   > %H:24小时制的时
+   >
+   > %M:24小时制的分钟
+   >
+   > %S:秒
+   >
+   > %z:根据UTC判断的时区
+   >
+   > %A:周的全名
+   >
+   > %a:周的简称
+
+5. time.strptime(str,format):将时间字符串转换为指定格式的time类型
+
+6. time.gmtime([n]):获得UTC时区的时间,n参数同localtime中的参数,UTC比中国时区少8小时
+
+7. time.mktime(tuple):将一个类似localtime结果的元组传入其中,获得一个时间戳,以秒为单位
+
+
+
+### 2.datetime
+
+1. 对time的封装,复杂的时间操作可以使用该类
+2. datetime.date:只负责年月日的计算
+3. datetime.time:只负责时分秒的计算
+4. datetime.datetime:对年月日时分秒的计算
+
+
+
+### 3.random
+
+> 需引入random,import random,随机数
+
+1. random.random():随机生成[0,1)的小数,不包含1
+2. random.uniform(1,10):随机生成[1,10)之间的小数
+3. random.randint(m,n):随机生成[m,n]的整数,注意包括开头的结尾
+4. random.randrange(m,n):随机生成[m,n)的整数,不包含结尾,最好使用range
+5. random.choice(seq):随机从一个序列,可迭代对象中随机取出一个值
+6. random.sample(seq,num):随机从序列或可迭代对象中取出num个数字的元素,并返回一个列表
+7. random.shuffle(list):将列表中元素的顺序随机打乱
+
+
+
+### 4.sys
+
+> 需引入sys,import sys,程序相关
+
+1. sys.path:path属性,非方法,输出python环境变量,有多个,包括当前文件地址,标准库环境,第3方库环境等
+2. sys.argv:获得运行python脚本时输入的参数列表,第一个参数是运行脚本时的路径,argv[1]开始是参数
+3. sys.exit(n):退出程序
+4. sys.version:获得python的版本
+5. sys.maxint:最大的int值
+6. sys.platform:操作平台的名称
+7. sys.stdout.write(str):输出字符串等
+
+
+
+### 5.os
+
+> 需引入os,import os,操作系统相关操作
+
+1. os.getcwd():获得当前工作目录,即当前python脚本工作的目录路径
+2. os.chdir("dirname"):改变当前脚本工作目录,相当于linux下的cd
+3. os.curdir:返回当前目录,就是点
+4. os.pardir:返回当前目录的父目录,就是..
+5. os.makedirs("p/c"):创建多级目录
+6. os.mkdir("f"):创建文件夹或目录
+7. os.removedirs("f"):删除目录及子文件
+8. os.rmdir("f"):删除空文件夹
+9. os.listdir("f"):列出目录下的文件
+10. os.rename(oldname,newname):文件改名
+11. os.environ:获得系统环境变量
+12. os.stat(path):获得文件或目录信息
+13. os.sep:输出操作系统的路径分隔符
+14. os.linesep:输出操作系统的行终止符
+15. os.path.abspath("f"):获得当前文件的觉得路径
+16. os.path.split("f"):将文件路径分割成父路径和文件名
+17. os.path.basename(path):返回路径最后的文件名,若路径以/或\结尾,返回None
+18. os.path.exists("f"):若路径存在返回True,否则返回False
+19. os.path.isabs("f"):若文件路径为绝对路径,返回True
+20. os.path.isfile("f"):是一个文件,返回True
+21. os.path.isdir("f"):是一个目录,返回True
+22. os.path.join(path1[,path2...]):将多个路径组合后返回,第一个绝对路径之前的参数将忽略
+23. os.path.getatime(path):返回文件或目录的最后存取时间
+24. os.path.getmtime(path):返回文件或目录的最后修改时间
+
+
+
+### 6.shutil(文件处理)
+
+> 高级的文件,文件夹,压缩包处理模块
+
+1. shutil.copyfileobj(fsrc,fdst[,length]):将fsrc文件中的内容复制到fdst中,length为每次读取的字节数
+2. shutil.copyfile(fsrc,fdst):复制文件
+3. shutil.copymode(src,des):仅复制文件权限,其他不变
+4. shutil.copystat(src,des):复制状态信息,包括mode bits,atime,mtime,flags
+5. shutil.copy(src,des):复制文件和权限
+6. shutil.copy(src,des):复制文件和状态信息,包括权限信息
+7. shutil.copytree(src,des):递归的复制文件
+8. shutil.rmtree(path):递归的删除目录
+9. shutil.move(src,des):递归的移动文件
+10. shutil.make_archive(base_name,format,...):创建压缩包并返回文件路径,base_name是压缩包的文件名,若文件名带路径时,保存到指定目录,不带目录则保存在当前目录;format是压缩包的种类,zip,tar等;root_dir要压缩的文件夹路径,owner用户,group组,logger记录日志
+11. 
+
+
+
+### 7.json,pickle
+
+> 都是对json进行操作的模块
+
+1. json只能对json字符串进行操作
+2. pickle可以对任何类型进行json类型的存储,但是写入和读取文件时必须要加上b类型,因为pickle默认是通过二进制来存储数据.pickle能使用的方法和json能使用的方法是一样的,但是pickle写入的数据无法跨语言交互,是python独有.**若pickle中存储了方法或对象等到文件中,读取的时候必须在当前文件有同名的方法或对象,即使方法和对象的内容和以前的不一样也没问题,主要是必须有同名的方法和类**
+
+```python
+import pickle
+import json
+
+dict1 = {"key1":"test1", "key2":"test2"}
+file = open("testFile.txt", "w+",encoding="utf8")# json的用法和pickle是一样的,只是不能存取二进制
+data = json.dumps(dict1);
+print(type(data));  # dumps之后得到的是字符串
+file.write(data)
+file.close()
+file = open("testFile.txt", "r",encoding="utf8")  # json只能读取字符串,不能读取二进制文件
+data1 = json.loads(file.read())
+print(type(data1))  # dict
+file.close()
+file = open("testFile.txt", "r",encoding="utf8")
+data2 = json.load(file)  # 其实仍然是调用json.loads(file.read())
+file.close()
+
+# 读取文件中的json字符串,并转换
+file1 = open("testFile.txt", "rb+")
+file1.write(pickle.dumps(dict1))    # 不管是以何种形式打开文件,pickle读取的都是bytes类型
+# pickle.dump(dict1, file);# 直接将dict类型写入文件中,不需要显式的调用dumps方法,文件也不需要写write和close
+file1.close();
+file1 = open("testFile.txt", "rb+")
+data = file1.read();
+print(pickle.loads(data))
+file1.seek(0)
+des = pickle.load(file1);
+print(des)
+file1.close();
+```
+
+
+
+### 8.shelve(json处理)
+
+> 和pickle类型,只是比pickle更简单,也是键值对的存储,可以持久化任何pickle支持的类型
+
+```python
+import shelve
+
+file = shelve.open("testFile")  # 默认会创建3个文件,后缀分别是bak,dat,dir
+file["test"]=[23,54]    # 只能通过属性或update方法添加属性,关闭文件时写入到文件中
+file["eee"]=34
+file.close()
+file = shelve.open("testFile")
+print(file.get("test")) # 直接读取内容
+```
+
+
+
+### 9.xml
+
+> xml文件的处理,主要使用xml.etree.ElementTree
+
+```python
+import xml.etree.ElementTree as ET	#xml的解析,修改,删除
+tree = ET.parse("xmltest.xml")
+root = tree.getroot()	# 获得根节点
+root.findall("country") # 从根下查找所有的country标签
+first=root.find("country")    # 只查找第一个country标签
+root.remove(first)  # 删除某个标签,删除之后要调用write写入
+for node1 in root:# 遍历xml文档,xml有多少层就写多少层for循环,需要优化修改
+    for node2 in node1:
+        print(node2.tag, node2.text,node2.attrib)   # 节点的标签,文档,属性
+for node in root.iter('year'):# 只遍历year 节点
+    print(node.tag, node.text)
+for node in root.iter('year'):# 修改
+    node.text = "2030"  # 修改文本内容
+    node.set("attr1","343") # 设置属性
+tree.write("xmltest.xml")   # 重新写入
+```
+
+```python
+import xml.etree.ElementTree as ET	# xml的生成
+person = ET.Element("personInfos")	# 根节点
+personInfo = ET.SubElement(person, "personInfo", attrib={"enrolled": "yes"}) #创建子节点
+name = ET.SubElement(personInfo, "name")
+name.text = "KiMiRoNaMannEWa"
+age = ET.SubElement(personInfo, "age", attrib={"checked": "no"})
+sex = ET.SubElement(personInfo, "sex")
+age.text = '56'
+personinfo2 = ET.SubElement(person, "personInfo", attrib={"enrolled": "no"})
+name = ET.SubElement(personInfo2, "name")
+name.text = "YOUR FATHER"
+age = ET.SubElement(personInfo2, "age")
+age.text = '19'
+et = ET.ElementTree(person)  # 生成文档对象
+et.write("person.xml", encoding="utf-8", xml_declaration=True)
+ET.dump(person)  # 打印生成的格式
+```
+
+
+
+### 10hashlib,hmac(加密)
+
+> 都是加密模块,替代了原先的md5和sha模块,import hashlib;import hmac
+
+1. hashlib:主要提供SHA1,SHA224,SHA256,SHA384,SHA512,MD5算法
+2. hmac:内部对创建的key和内容先进行处理之后再加密
+
+```python
+import hashlib
+import hmac
+m=hashlib.md5()
+m.update(b"Hello")	# 若使用二进制则不支持中文
+m.update("我是谁".encode(encoding="utf8")) # 中文需要先编码
+m.update(b"World")  # update是每次都拼接上上一次update的值进行加密,中间无空格
+print(m.digest())	# 返回二进制的字符串
+print(m.hexdigest())    # 返回二进制进行16进制编码之后的字符串,68e109f0f40ca72a15e05cc22786f8e6
+m2=hashlib.md5()
+m2.update(b"HelloWorld")
+print(m2.hexdigest())   # 和前面2次update的值一样,68e109f0f40ca72a15e05cc22786f8e6
+hh = hmac.new(b"key", b"msg", "md5")#最后的加密方式和hashlib一样,key必须是二进制,msg中文需编码
+hh.update(b"value")
+print(hh.hexdigest())
+```
+
+
+
+### 11.re(正则)
+
+> 正则表达式,import re
+
+1. 点(.)可以匹配任意单个字符,除了换行符,若在匹配的时候指定flag DOTALL,则包含点
+2. re.match("regex正则表达式","srcstr"):只要有返回就表示匹配到了,从srcstr的开头匹配
+3. re.search(regex,srcstr,flags=re.I):从整个srcstr中搜索,不需要从开始匹配,I(英文我的意思),忽略大小写
+4. re.serach(regex1|regex2,srcstr).group():|表示或,regex1和regex2中只要有1个匹配就行,group必须有,只返回第一次匹配的结果
+5. re.findall(regex,srcstr):从整个srcstr中找到所有匹配的字符串列表
+6. re.split(regex,srcstr):根据正则拆分字符串
+7. re.sub(regex,repl,srcstr):将符合正则的表达式从srcstr中替换成repl
+
+
+
+## 九.异常处理
+
+### 1.异常使用方式
+
+```python
+try:
+	dosomething
+except KeyError: # 单种错误
+	dosomething
+except IndexError:	# 单种错误
+	dosomething
+except (KeyError,IndexError): # 多种错误一起
+	dosomething
+except Exception:	# 包含大部分错误
+	dosomething
+else:
+    # 若没有发生异常,走这里
+finally:
+    # 不管有没有错,都执行
+```
+
+
+
+### 2.抛出异常
+
+1. raise:抛出异常
+
+
+
+### 3.自定义异常
+
+> 继承Exception即可 
+
+
+
+# Django
+
+## 1.项目生成
+
+## 2.配置文件
+
+### 1.settings
+
+#### 1.1 DATABASES
+
+1. default:默认数据库配置,是一个字典,里面有如下参数
+
+   1. ENGINE:数据库类型,默认是sqlite,mysql
+
+   ```python
+   mysql:django.db.backends.mysql
+   sqlite:django.db.backends.sqlite3
+   ```
+
+   2. NAME:数据库名
+   3. USER:登录数据库的用户名
+   4. PASSWORD:登录数据库的密码
+   5. HOST:数据库ip
+   6. PORT:数据库端口
+
+```python
+DATABASES:{
+	"default":{
+		"ENGINE":"django.db.backends.mysql",
+		"NAME":"expython",#sqlite一般直接放在项目中,os.path.join(BASE_DIR,"db.sqlite3")
+		"USER":"root",
+		"PASSWORD":"123456",
+		"HOST":"localhost",
+		"PORT":"3306"
+	}
+}
+```
+
+2. 若需要使用mysql,则需要在项目根目录下的init文件中引入mysql包,并执行语句
+
+```python
+import pymysql
+pymysql.install_as_MySQLdb()
+```
+
+
+
+
+
+
+
+## 2.模块介绍
+
+## 3.路由介绍
+
+## 4.自动创建
+
+### 4.1 表自动生成
+
+#### 4.1.2 通过实体类生成表
+
+1. 实体类必须继承Django的models.Model类,需要引入相关类
+
+2. 在项目的settings.py的installed_apps中添加实体类所在的包地址名称,注册该包
+
+3. 在项目文件夹中使用控制台命令在数据库生成相应表
+
+   > python manage.py makemigrations # 在项目的migrations下会创建一个历史记录文件
+   >
+   > python manage.py migrate # 执行记录文件
+
+4. 字段实体属性参数列表
+
+   1. max_length:字段长度
+   2. null:字段是否可为空,boolean
+   3. default:字段默认值
+   4. primary_key:是否为主键,boolean
+   5. db_column:当字段名和数据库名不一样时,使用db_column
+   6. db_index:索引
+   7. uniqe:唯一索引
+   8. uniqe_date:时间年月日时分秒索引
+   9. uniqe_month:时间月索引
+   10. uniqe_year:时间年索引
+   11. auto_now:时间类型字段,是否在创建时自动生成时间
+   12. auto_now_add:时间类型字段,自动更新时为当前时间
+   13. choices:django的admin字段显示的可选下拉框列表,是一个list
+   14. blank:django中的admin字段是否可为空
+   15. verbose_name:django的admin显示的中文字段
+   16. editable:django的admin字段是否可编辑
+   17. error_messages:django的admin字段错误时的提示信息,是一个字典
+   18. help_text:django的admin字段错误时的提示信息
+   19. validators:django的admin字段自定义验证方法,是一个方法的引用
+
+```python
+from django.db import models
+
+# django会自动根据实体类创建数据库表,必须要继承models.Model
+class User(models.Model):
+    # 多少个字段会创建多少列,同时还会自动创建一个id类,主键,自增
+    # 创建字符串类型的字典,长度为32
+    username = models.CharField(max_length=32)
+    password = models.CharField(max_length=64)
+```
+
+
+
+## 5.模板继承
+
+### 5.1 简介
+
+> 和nginx和include,vue中的父子模块一样,都是为了组件的复用,减少代码开发
+
+### 5.2 使用
+
+1. 上级模板为完成的html页面,其中需要自定义的模块用特定元素代替
+
+   > {% block 自定义字符串 %}
+   >
+   > ​	<!-- 需要的html元素,样式,js都可以写 -->
+   >
+   > {% endblock %}
+
+2. 上级模块中可以有多个部分被替代,每个部分并不需要指定特定的下级替代
+
+3. 下级模块也是一个html文件,但只需要写替代上级模块的部分,必须继承上级模块{% extends "parent.html" %}
+
+4. 下级模块中需要替代上级模块的部分如:{% block 同上级模块中相同的字符串 %}
+
+5. 下级模块同时也可以包含更下级的模块,仍然不需要写完整的html,只需要写需要的部分即可,js和css部分都可以
+
+```html
+<!-- parent.html -->
+<!DOCTYPE html>
+<html>
+<header>
+    {% block title %}{% endblock %}
+    <!-- {% block css %}{% endblock %} -->
+    <!-- {% block jquery %}{% endblock %} -->
+</header>
+<body>
+	{% block body %}{% endblock %}
+</body>
+</html>
+```
+
+```html
+<!-- children.html -->
+{% extends "parent.html" %}
+{% block title %}<title>this is a test</title>{% endblock %}
+{% block body %}
+<h1>这就是个测试</h1>
+{% endblock %}
+```
+
+
+
+## 6.自定义tag
+
+> 自定义标签只是写一个python方法,然后在html文件中引用python方法
+
+1. 需要在项目下创建templatetags目录,名称固定,不能改
+2. 在settings文件中添加项目的名称
+3. 写一个python文件
+
+```python
+from django import template
+register = template.Library() # 固定写法
+
+@register.simple_tag # 固定写法
+def test(arg1,arg2):
+	return "test01"
+```
+
+4. 在html顶部使用load关键字,引入上面写的方法
+
+```html
+{% load python文件的名字 %}
+<!DOCTYPE html>
+<html>
+<header></header>
+<body>
+	{% test arg1 arg2 %}
+</body>
+</html>
+```
+

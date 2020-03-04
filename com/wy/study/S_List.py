@@ -1,3 +1,5 @@
+from _collections_abc import Iterator
+
 list1 = [1, 23, 5, 6, "fdgfe", "gery", "rewtre"]
 for item in list1:
     print(item)
@@ -44,3 +46,4 @@ print(enum1)
 for index,item in enum1:
     print(index,item)
 
+print(isinstance((x for x in range(10)), Iterator))

@@ -15,31 +15,46 @@ str2 = 112
 
 
 def testtt():
+#     print(str2)
+    # 先从函数中找,若先调用后定义报错,若没有定义,从包裹函数的外层找,一层一层的找,知道文件末尾,找不到抛异常
+    # 此处的修改只对函数内有效,其实只是在函数内重新定义了一个同名变量而已,并不会影响外层变量
+    # 要想对外层变量产生影响,需要先使用global关键字修饰
+    # 若外层没有定义str2,如使用global修饰了,那么str2就变成了全局变量,但是这很容易会导致全局变量混乱,最好不要用
     global str2
-    str2 = 45
+    str2 = 45   
     print(str2)
 
      
 testtt()
+print(str2)
+
 
 class Test():
+    
+    __slots__=["test"]
+    
     def __init__(self):
         print("Parent Test")
-
+        
+# tt123 = Test()
+# tt123.fdsfew=45 # 抛异常
+# print(tt123)
+        
 # object是所有类的父类,不写默认继承object
-class TestClass(Test,object):
+class TestClass(Test, object):
+    __slots__ = ["test1", "test2"] # 若不继承Test,那么给实例新增不在列表中的值属性时会抛异常
 
     """
         类全局变量必须赋值,相当于java中的public static
         类全局变量可以直接以类名点属性名,TestClass.str1,不是调用的全局变量,谨慎,容易出错,最好不要用
         直接用类名.属性名或实例.属性名都可以方法类全局变量,但是只能是类名.属性名的时候可以修改类全局变量,
-        实例只可访问,不能直接修改类全局变量
+        实例只可访问,不能直接修改类全局变量,但是可以修改可变参数的元素
     """
     str1 = "类全局变量";
     num1 = 6666666666;
     str2 = 456
     print(str2)
-    str3="大大"
+    str3 = "大大"
     
     # 私有属性,在属性前面加2个下划线,不能像类全局变量一样外部访问,必须通过方法类中方法访问或内置系统属性调用
     # 类实例._TestClass__username同样可以在外部访问类私有属性,实例属性同样如此
@@ -51,7 +66,7 @@ class TestClass(Test,object):
         return TestClass.__username
     
     # 构造方法,self必须是第一个参数,后面的都是参数,self相当于类本身.每次都会调用
-    def __init__(self,*args1, **args2):
+    def __init__(self, *args1, **args2):
         # 赋值给类中属性,该属性可以不先定义
         super().__init__()
         Test.__init__(self)
@@ -59,8 +74,8 @@ class TestClass(Test,object):
         self.args2 = args2
         print("我是每次默认都会调的,初始化方法,相当于空构造")
         print(args1)
-        TestClass.num1+=1
-        TestClass.str3="小小"
+        TestClass.num1 += 1
+        TestClass.str3 = "小小"
         self.testGlobal()
     
     def testGlobal(self):
@@ -78,8 +93,8 @@ class TestClass(Test,object):
     def __del__(self):
         print("相当于destory,对象被销毁时调用,可不重写")
         
-    def __call__(self,*arg1,**arg2):
-        print(arg1,arg2)
+    def __call__(self, *arg1, **arg2):
+        print(arg1, arg2)
         print("这是一个可调用类")
         print("只需要简单的重写该方法,即可以让类像函数一样调用")
         
@@ -121,6 +136,7 @@ class TestClass(Test,object):
         print("test05")
         return test10
 
+
 if __name__ == "__main__":
     O1 = TestClass();
     O2 = TestClass();
@@ -149,13 +165,20 @@ if __name__ == "__main__":
 #     print(TestClass.__username) # 抛异常,无法访问
 #     print(O1.__username)    # 抛异常,无法访问
 #     print(O1.getUsername())     # 可访问
+
     
 def test10():
     print("test10")
+
+
 O3 = TestClass()
-print(O3.getUsername())     # 可访问
+print(O3.getUsername())  # 可访问
 print(O3._TestClass__username)  # 可访问
 print(O3.test05)
 print(TestClass.func1())
 print(O3.test05)
-print(O3.test05())  # 错误,抛异常,O3.test05会返回一个None类型,后面加了()表示调用None(),但无法调用
+try:
+    print(O3.test05())  # 错误,抛异常,O3.test05会返回一个None类型,后面加了()表示调用None(),但无法调用
+    print(O3.test1)
+except Exception:
+    print("报错", Exception.args)

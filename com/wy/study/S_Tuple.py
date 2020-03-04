@@ -21,3 +21,5 @@ print(zip(a, b))
 print(list(zip(a, b)))
 print(tuple(zip(a, b)))
 print(tuple(zip(a, b))[0][0])
+
+
